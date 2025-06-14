@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>boxput – Multi Tool Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- OFFICIAL COLOR PALETTE --- */
+        :root {
+            --bg-main: #0d0f14;
+            --bg-sidebar: #12151a;
+            --bg-card: #1c222d;
+            --bg-button: #1c222d;
+            
+            --accent-primary: #42f8f5;
+            --accent-alt: #3ff7f3;
+            
+            --text-primary: #ffffff;
+            --text-secondary: #c5d1de;
+            
+            --glow-shadow: rgba(66, 248, 245, 0.6);
+            --hover-bg: #42f8f5;
+
+            --font-primary: 'Roboto', sans-serif;
+            --font-display: 'Orbitron', sans-serif;
+            --sidebar-width: 260px;
+        }
+
+        /* --- GLOBAL & RESET --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+        }
+
+        /* --- LAYOUT: SIDEBAR + MAIN CONTENT --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--accent-primary);
+            box-shadow: 4px 0 15px rgba(0,0,0,0.5);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            z-index: 1100;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        /* --- SIDEBAR STYLING --- */
+        .sidebar-logo {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        .sidebar-logo h1 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            text-shadow: 0 0 8px var(--glow-shadow);
+        }
+        .sidebar-logo a { text-decoration: none; color: inherit; }
+
+        .sidebar-nav ul {
+            list-style: none;
+        }
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: block;
+            padding: 0.8rem 1rem;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .sidebar-nav a:hover {
+            background-color: var(--bg-card);
+            color: var(--accent-primary);
+            transform: translateX(5px);
+        }
+        .sidebar-nav a.active {
+            background-color: var(--hover-bg);
+            color: var(--bg-main);
+            box-shadow: 0 0 15px var(--glow-shadow);
+        }
+        
+        /* --- MOBILE HEADER & MENU TOGGLE --- */
+        .mobile-header {
+            display: none;
+        }
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--accent-primary);
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* --- MAIN CONTENT & SECTIONS --- */
+        .content-section {
+            padding-top: 4rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .hero h2 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            color: var(--accent-primary);
+            text-shadow: 0 0 20px var(--glow-shadow);
+            margin-bottom: 1rem;
+        }
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        .hero .cta-button {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+
+        .page-content {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--bg-card);
+            padding: 2.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--bg-button);
+        }
+        .page-content h2 {
+            font-family: var(--font-display);
+            color: var(--accent-primary);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--accent-primary);
+            padding-bottom: 0.5rem;
+        }
+        .page-content p, .page-content ul {
+            margin-bottom: 1rem;
+        }
+         .page-content ul {
+            padding-left: 20px;
+        }
+        .page-content a {
+            color: var(--accent-alt);
+        }
+
+        /* --- TOOLS GRID --- */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .tool-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--bg-button);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px var(--glow-shadow);
+        }
+        .tool-card h3 {
+            font-family: var(--font-display);
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .tool-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+
+        /* --- BUTTONS --- */
+        .glowing-btn, .tab-btn {
+            background-color: var(--bg-button);
+            color: var(--text-primary);
+            border: 1px solid var(--accent-primary);
+            border-radius: 5px;
+            padding: 0.75rem 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px var(--glow-shadow);
+            align-self: flex-start;
+        }
+        .glowing-btn:hover, .glowing-btn:focus, .tab-btn:hover {
+            background-color: var(--hover-bg);
+            color: var(--bg-main);
+            box-shadow: 0 0 25px var(--glow-shadow);
+            transform: scale(1.05);
+        }
+        .glowing-btn:disabled, .glowing-btn[disabled]{
+            border: 1px solid #555; background-color: #333; color: #888; cursor: not-allowed; box-shadow: none; transform: none;
+        }
+        .tab-btn { text-transform: none; border-bottom: none; border-radius: 5px 5px 0 0; background-color: transparent; }
+        .tab-btn.active { background: var(--accent-primary); color: var(--bg-main); }
+        
+        /* --- MODAL --- */
+        .modal-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(13, 15, 20, 0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-container.show { display: flex; opacity: 1; }
+        .modal-content { background-color: var(--bg-main); padding: 2rem; border-radius: 8px; border: 1px solid var(--accent-primary); box-shadow: 0 0 30px var(--glow-shadow); width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; position: relative; transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal-container.show .modal-content { transform: scale(1); }
+        .modal-close-btn { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-secondary); font-size: 2rem; cursor: pointer; transition: color 0.3s ease, transform 0.3s ease; }
+        .modal-close-btn:hover { color: var(--accent-primary); transform: rotate(90deg); }
+        #modal-tool-content h2 { font-family: var(--font-display); color: var(--accent-primary); margin-bottom: 1.5rem; text-align: center; }
+        
+        /* --- TOOL-SPECIFIC STYLES --- */
+        .tool-ui { display: flex; flex-direction: column; gap: 1rem; }
+        .tool-ui label { font-weight: 700; color: var(--text-secondary); }
+        .tool-ui input[type="text"], .tool-ui input[type="number"], .tool-ui input[type="date"], .tool-ui input[type="file"], .tool-ui input[type="color"], .tool-ui textarea, .tool-ui select { width: 100%; padding: 0.75rem; background-color: var(--bg-button); border: 1px solid var(--bg-card); border-radius: 5px; color: var(--text-primary); font-size: 1rem; font-family: var(--font-primary); }
+        .tool-ui textarea { min-height: 120px; resize: vertical; }
+        .tool-ui input:focus, .tool-ui textarea:focus, .tool-ui select:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 10px var(--glow-shadow); }
+        .tool-ui .result-box { background-color: var(--bg-sidebar); padding: 1rem; border-radius: 5px; border: 1px solid var(--bg-button); word-wrap: break-word; white-space: pre-wrap; min-height: 50px; }
+        .tool-ui .result-box strong { color: var(--accent-alt); }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(calc(-1 * var(--sidebar-width)));
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: var(--bg-sidebar);
+                padding: 0.5rem 1rem;
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                border-bottom: 1px solid var(--accent-primary);
+            }
+            .hero h2 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-logo">
+            <a href="#home"><h1>boxput</h1></a>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="#home" class="nav-link active">Home</a></li>
+            <li><a href="#tools" class="nav-link">Tools</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+            <li><a href="#privacy-policy" class="nav-link">Privacy Policy</a></li>
+            <li><a href="#disclaimer" class="nav-link">Disclaimer</a></li>
+        </ul>
+    </nav>
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+         <a href="#home" style="text-decoration: none;">
+            <h1 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--text-primary);">boxput</h1>
+        </a>
+        <button class="menu-toggle" aria-label="Open menu">&#9776;</button>
+    </header>
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+        
+        <!-- Home / Landing Page Section -->
+        <section id="home" class="content-section hero">
+            <h2>Multi Tool Hub</h2>
+            <p>Your one-stop destination for 20+ powerful, client-side tools. Built with a futuristic UI, everything runs directly in your browser, ensuring speed and privacy.</p>
+            <a href="#tools" class="glowing-btn cta-button">Explore Tools</a>
+        </section>
+
+        <!-- Tools Section -->
+        <section id="tools" class="content-section">
+             <div class="page-content" style="max-width: none; padding: 0; background: none; border: none;">
+                 <h2 style="text-align: center; border: none; font-size: 2.5rem; margin-bottom: 2.5rem;">Our Toolkit</h2>
+                 <div class="tools-grid">
+                     <!-- Tool cards will be dynamically generated by JS -->
+                 </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="content-section">
+            <div class="page-content">
+                <h2>About Boxput</h2>
+                <p>Boxput is a high-performance, frontend-only toolkit built with zero external libraries or frameworks. Every tool runs directly and securely in your browser, ensuring your data remains private and your workflow is lightning-fast.</p>
+                <p>Our mission is to provide essential utilities for developers, designers, and creators with a clean, futuristic interface that is both powerful and a joy to use. We believe in the power of the open web and demonstrate what can be achieved with modern, native browser technologies.</p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="content-section">
+            <div class="page-content">
+                <h2>Contact Us</h2>
+                <p>We are always eager to hear from our users. Whether you have a suggestion for a new tool, a feature request, or just want to say hi, feel free to reach out.</p>
+                <p>For any inquiries, please contact us via our conceptual email: <a href="mailto:support@boxput.dev">support@boxput.dev</a></p>
+            </div>
+        </section>
+
+        <!-- Privacy Policy Section -->
+        <section id="privacy-policy" class="content-section">
+            <div class="page-content">
+                <h2>Privacy Policy</h2>
+                <p><strong>Your Privacy is Our Priority.</strong></p>
+                <p>Boxput is designed with a "privacy-first" approach. Since this is a fully frontend-only application, all processing happens on your own computer, inside your web browser. </p>
+                <ul>
+                    <li>We do not have a backend server to store your data.</li>
+                    <li>We do not collect, save, or transmit any files you upload or text you enter.</li>
+                    <li>Your data never leaves your machine. Once you close the browser tab, it's gone.</li>
+                    <li>The only exception is the QR Code Generator, which sends the text you provide to the public `api.qrserver.com` API to generate the image. We do not control that service.</li>
+                </ul>
+                <p>You can use Boxput with the full confidence that your information remains yours and yours alone.</p>
+            </div>
+        </section>
+
+        <!-- Disclaimer Section -->
+        <section id="disclaimer" class="content-section">
+             <div class="page-content">
+                <h2>Disclaimer</h2>
+                <p>The tools provided on Boxput are for general informational and utility purposes only. While we strive to ensure the accuracy and reliability of our tools, we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information or tool on this site.</p>
+                <p>Under no circumstance shall we have any liability to you for any loss or damage of any kind incurred as a result of the use of the site or reliance on any information provided on the site. Your use of the site and your reliance on any information on the site is solely at your own risk. All tools are provided on an "as is" basis.</p>
+             </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Structure -->
+    <div id="tool-modal" class="modal-container">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <div id="modal-tool-content">
+                <!-- Tool-specific UI will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- CORE UI & NAVIGATION LOGIC ---
+        const menuToggle = document.querySelector('.menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('show');
+        });
+
+        // Close sidebar when a link is clicked on mobile
+        sidebar.addEventListener('click', (e) => {
+            if (e.target.classList.contains('nav-link')) {
+                sidebar.classList.remove('show');
+            }
+        });
+        
+        // Scrollspy for active link highlighting
+        const sections = document.querySelectorAll('.content-section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        const activateLink = (id) => {
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('href') === '#' + id) {
+                    link.classList.add('active');
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting){
+                    activateLink(entry.target.id);
+                }
+            });
+        }, { rootMargin: '-30% 0px -70% 0px' });
+        
+        sections.forEach(section => observer.observe(section));
+
+
+        // --- TOOL DEFINITIONS & LOGIC ---
+        const tools = [
+            { id: 'image-converter', title: 'Image Converter', description: 'Convert images to PNG, JPEG, or WEBP format.' },
+            { id: 'image-compressor', title: 'Image Compressor', description: 'Reduce image file size with adjustable quality.' },
+            { id: 'image-cropper', title: 'Image Cropper', description: 'Crop images visually to the perfect dimensions.' },
+            { id: 'video-to-gif', title: 'Video Frame Extractor', description: 'Extract frames from a video to create sequences.' },
+            { id: 'audio-trimmer', title: 'Audio Trimmer', description: 'Trim audio files to the desired length in your browser.' },
+            { id: 'age-calculator', title: 'Age Calculator', description: 'Calculate your age accurately from your date of birth.' },
+            { id: 'emi-calculator', title: 'EMI Calculator', description: 'Calculate Equated Monthly Installment for loans.' },
+            { id: 'sip-calculator', title: 'SIP Calculator', description: 'Estimate returns on your Systematic Investment Plan.' },
+            { id: 'qr-code-generator', title: 'QR Code Generator', description: 'Create QR codes for URLs, text, and more.' },
+            { id: 'password-generator', title: 'Password Generator', description: 'Generate strong, secure, and random passwords.' },
+            { id: 'word-counter', title: 'Word Counter', description: 'Count words, characters, and lines in your text.' },
+            { id: 'base64-converter', title: 'Base64 Encoder/Decoder', description: 'Encode text to or decode from Base64 format.' },
+            { id: 'color-picker', title: 'Color Picker Tool', description: 'Pick colors and get their HEX, RGB, and HSL values.' },
+            { id: 'text-to-speech', title: 'Text to Speech', description: 'Convert text into natural-sounding speech.' },
+            { id: 'speech-to-text', title: 'Speech to Text', description: 'Transcribe your spoken words directly into text.' },
+            { id: 'json-formatter', title: 'JSON Formatter', description: 'Format, validate, and beautify your JSON data.' },
+            { id: 'unit-converter', title: 'Unit Converter', description: 'Convert between various units of measurement.' },
+            { id: 'bmi-calculator', title: 'BMI Calculator', description: 'Calculate your Body Mass Index (BMI).' },
+            { id: 'timer-stopwatch', title: 'Timer / Stopwatch', description: 'A simple, precise timer and stopwatch utility.' },
+            { id: 'case-converter', title: 'Case Converter', description: 'Convert text to uppercase, lowercase, title case, etc.' },
+            { id: 'lorem-ipsum-generator', title: 'Lorem Ipsum Generator', description: 'Generate placeholder text for your designs.' }
+        ];
+
+        const toolsGrid = document.querySelector('.tools-grid');
+        const modal = document.getElementById('tool-modal');
+        const modalContent = document.getElementById('modal-tool-content');
+        const closeModalBtn = document.querySelector('.modal-close-btn');
+        let currentToolCleanup = null;
+
+        // Populate tool cards
+        tools.forEach(tool => {
+            const card = document.createElement('div');
+            card.className = 'tool-card';
+            card.innerHTML = `
+                <h3>${tool.title}</h3>
+                <p>${tool.description}</p>
+                <button class="glowing-btn" data-tool-id="${tool.id}">Open Tool</button>
+            `;
+            toolsGrid.appendChild(card);
+        });
+
+        // Modal open/close logic
+        toolsGrid.addEventListener('click', (e) => {
+            if (e.target.classList.contains('glowing-btn')) {
+                const toolId = e.target.dataset.toolId;
+                openToolModal(toolId);
+            }
+        });
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        function openToolModal(toolId) {
+            const tool = tools.find(t => t.id === toolId);
+            if (!tool) return;
+
+            const implementation = getToolImplementation(toolId);
+            modalContent.innerHTML = `
+                <h2>${tool.title}</h2>
+                <div class="tool-ui">
+                    ${implementation.html}
+                </div>
+            `;
+            implementation.js(); 
+            currentToolCleanup = implementation.cleanup || null;
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            if (typeof currentToolCleanup === 'function') {
+                currentToolCleanup();
+            }
+            modal.classList.remove('show');
+            modalContent.innerHTML = ''; 
+            currentToolCleanup = null;
+        }
+        
+        // --- Helper Functions ---
+        function showAlert(containerId, message, isError = false) {
+            const container = document.getElementById(containerId);
+            if(container) {
+                container.textContent = message;
+                container.style.color = isError ? '#ff6b6b' : 'var(--accent-alt)';
+            }
+        }
+
+        function createDownloadLink(href, downloadName, text, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            const a = document.createElement('a');
+            a.href = href;
+            a.download = downloadName;
+            a.textContent = text;
+            a.className = 'glowing-btn';
+            a.style.display = 'inline-block';
+            a.style.marginTop = '1rem';
+            a.style.textDecoration = 'none';
+            a.style.textAlign = 'center';
+            container.appendChild(a);
+        }
+        
+        // --- ALL TOOL IMPLEMENTATIONS ---
+        function getToolImplementation(toolId) {
+            const implementations = {
+                'image-converter': {
+                    html: `
+                        <label for="img-file">Select an image:</label>
+                        <input type="file" id="img-file" accept="image/*">
+                        <label for="img-format">Convert to:</label>
+                        <select id="img-format">
+                            <option value="image/png">PNG</option>
+                            <option value="image/jpeg">JPEG</option>
+                            <option value="image/webp">WEBP</option>
+                        </select>
+                        <div id="img-converter-status" class="result-box"></div>
+                        <div id="img-download-container"></div>
+                    `,
+                    js: () => {
+                        const fileInput = document.getElementById('img-file');
+                        const formatSelect = document.getElementById('img-format');
+                        const statusBox = document.getElementById('img-converter-status');
+                        const downloadContainer = document.getElementById('img-download-container');
+
+                        const handleConversion = () => {
+                            const file = fileInput.files[0]; if (!file) return;
+                            downloadContainer.innerHTML = ''; showAlert(statusBox.id, 'Processing...');
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                const img = new Image();
+                                img.onload = () => {
+                                    const canvas = document.createElement('canvas'); canvas.width = img.width; canvas.height = img.height;
+                                    const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0);
+                                    const format = formatSelect.value; const dataUrl = canvas.toDataURL(format, 0.9);
+                                    const extension = format.split('/')[1];
+                                    createDownloadLink(dataUrl, `converted-image.${extension}`, 'Download Image', downloadContainer.id);
+                                    showAlert(statusBox.id, 'Conversion successful!');
+                                };
+                                img.src = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        };
+                        fileInput.addEventListener('change', handleConversion); formatSelect.addEventListener('change', handleConversion);
+                    }
+                },
+                'image-compressor': {
+                    html: `
+                        <label for="compress-file">Select an image (JPEG/WEBP):</label>
+                        <input type="file" id="compress-file" accept="image/jpeg,image/webp">
+                        <label for="compress-quality">Quality (0.1 to 1.0):</label>
+                        <input type="range" id="compress-quality" min="0.1" max="1.0" step="0.1" value="0.7">
+                        <div id="compress-status" class="result-box"></div>
+                        <div id="compress-download-container"></div>
+                    `,
+                    js: () => {
+                        const fileInput = document.getElementById('compress-file');
+                        const qualitySlider = document.getElementById('compress-quality');
+                        const statusBox = document.getElementById('compress-status');
+                        const downloadContainer = document.getElementById('compress-download-container');
+
+                        const handleCompression = () => {
+                            const file = fileInput.files[0]; if (!file) return;
+                            downloadContainer.innerHTML = '';
+                            const quality = parseFloat(qualitySlider.value);
+                            showAlert(statusBox.id, `Processing with quality ${quality}...`);
+                            const reader = new FileReader();
+                            reader.onload = e => {
+                                const img = new Image();
+                                img.onload = () => {
+                                    const canvas = document.createElement('canvas'); canvas.width = img.width; canvas.height = img.height;
+                                    const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0);
+                                    const mimeType = file.type === 'image/webp' ? 'image/webp' : 'image/jpeg';
+                                    const dataUrl = canvas.toDataURL(mimeType, quality);
+                                    const originalSize = (file.size / 1024).toFixed(2);
+                                    const compressedSize = (dataUrl.length * 0.75 / 1024).toFixed(2);
+                                    showAlert(statusBox.id, `Original: ${originalSize} KB | Compressed: ~${compressedSize} KB`);
+                                    createDownloadLink(dataUrl, `compressed-image.${mimeType.split('/')[1]}`, 'Download Compressed', downloadContainer.id);
+                                };
+                                img.src = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        };
+                        fileInput.addEventListener('change', handleCompression); qualitySlider.addEventListener('input', handleCompression);
+                    }
+                },
+                // All other tool implementations are here, minified to save space.
+                'image-cropper':{html:`<label for="crop-file">Select an image:</label><input type="file" id="crop-file" accept="image/*"><p>Click and drag on the image to select a crop area.</p><canvas id="crop-canvas" style="max-width: 100%; border: 1px solid #42f8f5;"></canvas><div id="crop-status" class="result-box"></div><div id="crop-download-container"></div>`,js:()=>{const e=document.getElementById("crop-file"),t=document.getElementById("crop-canvas"),a=t.getContext("2d"),o=document.getElementById("crop-status"),n=document.getElementById("crop-download-container");let i,l={},s=!1,r=null;e.addEventListener("change",e=>{const i=e.target.files[0];if(!i)return;const l=new FileReader;l.onload=e=>{this.img=new Image,r=new Image,this.img.onload=()=>{r.src=e.target.result;const i=500/this.img.width;t.width=500,t.height=this.img.height*i,a.drawImage(this.img,0,0,t.width,t.height),showAlert(o.id,"Image loaded. Drag to crop."),n.innerHTML=""},this.img.src=e.target.result},l.readAsDataURL(i)}),t.addEventListener("mousedown",e=>{s=!0,l.startX=e.offsetX,l.startY=e.offsetY}),t.addEventListener("mousemove",e=>{s&&this.img&&(a.clearRect(0,0,t.width,t.height),a.drawImage(this.img,0,0,t.width,t.height),l.w=e.offsetX-l.startX,l.h=e.offsetY-l.startY,a.strokeStyle="red",a.lineWidth=2,a.strokeRect(l.startX,l.startY,l.w,l.h))}),t.addEventListener("mouseup",()=>{if(s=!1,l.w&&l.h){showAlert(o.id,"Crop area selected. Click button to crop and download.");const e=document.createElement("button");e.textContent="Crop and Download",e.className="glowing-btn",e.onclick=()=>{const i=r.width/t.width,s=r.height/t.height,c=document.createElement("canvas"),d=c.getContext("2d");c.width=Math.abs(l.w*i),c.height=Math.abs(l.h*s);const m=(l.w>0?l.startX:l.startX+l.w)*i,g=(l.h>0?l.startY:l.startY+l.h)*s,u=Math.abs(l.w*i),p=Math.abs(l.h*s);d.drawImage(r,m,g,u,p,0,0,c.width,c.height),createDownloadLink(c.toDataURL("image/png"),"cropped-image.png","Download Cropped Image",n.id),showAlert(o.id,"Cropped successfully!")},n.innerHTML="",n.appendChild(e)}})}},
+                'video-to-gif':{html:`<label for="video-file">Select a short video:</label><input type="file" id="video-file" accept="video/*"><label for="fps">Frames Per Second (FPS):</label><input type="number" id="fps" value="10" min="1" max="30"><button class="glowing-btn" id="extract-frames-btn">Extract Frames</button><div id="video-status" class="result-box"></div><div id="frames-container" style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 1rem; max-height: 200px; overflow-y: auto;"></div>`,js:()=>{const e=document.getElementById("video-file"),t=document.getElementById("extract-frames-btn"),a=document.getElementById("video-status"),o=document.getElementById("frames-container");t.addEventListener("click",()=>{const t=e.files[0];if(!t)return void showAlert(a.id,"Please select a video file.",!0);showAlert(a.id,"Loading video..."),o.innerHTML="";const n=document.createElement("video");n.preload="metadata",n.src=URL.createObjectURL(t),n.muted=!0,n.onloadedmetadata=()=>{showAlert(a.id,`Video loaded. Duration: ${n.duration.toFixed(2)}s. Extracting frames...`);const e=document.createElement("canvas");e.width=n.videoWidth,e.height=n.videoHeight;const t=e.getContext("2d"),i=parseInt(document.getElementById("fps").value),l=1/i;let s=0,r=0;const c=()=>{if(s>n.duration)return showAlert(a.id,`Extraction complete! ${r} frames captured. You can right-click to save individual frames.`),void URL.revokeObjectURL(n.src);n.currentTime=s};n.onseeked=()=>{if(s>n.duration)return;t.drawImage(n,0,0,e.width,e.height);const i=new Image;i.src=e.toDataURL("image/jpeg"),i.style.width="100px",i.style.height="auto",i.title=`Frame ${r+1}`,o.appendChild(i),r++,s+=l,c()},c()}})}},
+                'audio-trimmer':{html:`<label for="audio-file">Select an audio file:</label><input type="file" id="audio-file" accept="audio/*"><label for="start-time">Start Time (seconds):</label><input type="number" id="start-time" value="0" min="0"><label for="end-time">End Time (seconds):</label><input type="number" id="end-time" value="10" min="0"><button class="glowing-btn" id="trim-audio-btn">Trim Audio</button><div id="audio-status" class="result-box"></div><div id="audio-download-container"></div>`,js:()=>{const e=new(window.AudioContext||window.webkitAudioContext),t=document.getElementById("audio-file"),a=document.getElementById("trim-audio-btn");let o;t.addEventListener("change",t=>{const a=t.target.files[0];if(!a)return;showAlert("audio-status","Loading audio file...");const n=new FileReader;n.onload=t=>{e.decodeAudioData(t.target.result,e=>{o=e,showAlert("audio-status",`Audio loaded. Duration: ${e.duration.toFixed(2)}s. Ready to trim.`)},e=>showAlert("audio-status","Error decoding audio file.",!0))},n.readAsArrayBuffer(a)}),a.addEventListener("click",()=>{if(!o)return void showAlert("audio-status","Please load an audio file first.",!0);const t=parseFloat(document.getElementById("start-time").value),a=parseFloat(document.getElementById("end-time").value);if(t>=a||a>o.duration||t<0)return void showAlert("audio-status","Invalid start/end time.",!0);showAlert("audio-status","Trimming...");const n=(a-t)*o.sampleRate,i=e.createBuffer(o.numberOfChannels,n,o.sampleRate);for(let e=0;e<o.numberOfChannels;e++){const t=Math.floor(t*o.sampleRate);o.copyFromChannel(i.getChannelData(e),e,t)}const l=function(e){const t=e.numberOfChannels,a=e.length*t*2+44,o=new ArrayBuffer(a),n=new DataView(o),i=[],l=e.sampleRate;let s=0,r=0;function c(e){n.setUint16(r,e,!0),r+=2}function d(e){n.setUint32(r,e,!0),r+=4}for(d(1179011410),d(a-8),d(1163280727),d(544501094),d(16),c(1),c(t),d(l),d(l*2*t),c(2*t),c(16),d(1635017060),d(a-r-4);r<a;)for(let t=0;t<e.numberOfChannels;t++){let a=Math.max(-1,Math.min(1,e.getChannelData(t)[s]));a=32768*a<0?32768*a:32767*a|0,n.setInt16(r,a,!0),r+=2}s++;return new Blob([n],{type:"audio/wav"})}(i),s=URL.createObjectURL(l);createDownloadLink(s,"trimmed-audio.wav","Download Trimmed WAV","audio-download-container"),showAlert("audio-status","Trimming successful!")})},cleanup:()=>{const e=new(window.AudioContext||window.webkitAudioContext);"closed"!==e.state&&e.close()}},
+                'age-calculator':{html:`<label for="dob">Enter your Date of Birth:</label><input type="date" id="dob"><button class="glowing-btn" id="calculate-age-btn">Calculate Age</button><div class="result-box" id="age-result"></div>`,js:()=>{document.getElementById("calculate-age-btn").addEventListener("click",()=>{const e=document.getElementById("dob").value,t=document.getElementById("age-result");if(!e)return void(t.innerText="Please select a date.");const a=new Date(e),o=new Date;if(a>o)return void(t.innerText="Date of birth cannot be in the future.");let n=o.getFullYear()-a.getFullYear(),i=o.getMonth()-a.getMonth(),l=o.getDate()-a.getDate();l<0&&(i--,l+=new Date(o.getFullYear(),o.getMonth(),0).getDate()),i<0&&(n--,i+=12),t.innerHTML=`You are <strong>${n}</strong> years, <strong>${i}</strong> months, and <strong>${l}</strong> days old.`})}},
+                'emi-calculator':{html:`<label for="principal">Loan Amount (₹):</label><input type="number" id="principal" value="1000000"><label for="rate">Annual Interest Rate (%):</label><input type="number" id="rate" value="8.5"><label for="tenure">Loan Tenure (Years):</label><input type="number" id="tenure" value="20"><button class="glowing-btn" id="calculate-emi-btn">Calculate EMI</button><div id="emi-result" class="result-box"></div>`,js:()=>{const e=document.getElementById("calculate-emi-btn"),t=document.getElementById("emi-result"),a=()=>{const e=parseFloat(document.getElementById("principal").value),a=parseFloat(document.getElementById("rate").value),o=parseFloat(document.getElementById("tenure").value);if(e>0&&a>0&&o>0){const n=a/12/100,i=12*o,l=(e*n*Math.pow(1+n,i))/(Math.pow(1+n,i)-1),s=l*i,r=s-e;t.innerHTML=`\n                                    Monthly EMI: <strong>₹ ${l.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong><br>\n                                    Total Interest: <strong>₹ ${r.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong><br>\n                                    Total Payment: <strong>₹ ${s.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong>\n                                `}else t.textContent="Please enter valid positive values."};document.querySelectorAll("#principal, #rate, #tenure").forEach(e=>e.addEventListener("input",a)),e.addEventListener("click",a),a()}},
+                'sip-calculator':{html:`<label for="sip-monthly">Monthly Investment (₹):</label><input type="number" id="sip-monthly" value="5000"><label for="sip-rate">Expected Annual Return (%):</label><input type="number" id="sip-rate" value="12"><label for="sip-tenure">Investment Period (Years):</label><input type="number" id="sip-tenure" value="15"><button class="glowing-btn" id="calculate-sip-btn">Calculate Returns</button><div id="sip-result" class="result-box"></div>`,js:()=>{const e=document.getElementById("calculate-sip-btn"),t=document.getElementById("sip-result"),a=()=>{const e=parseFloat(document.getElementById("sip-monthly").value),a=parseFloat(document.getElementById("sip-rate").value),o=parseFloat(document.getElementById("sip-tenure").value);if(e>0&&a>0&&o>0){const n=12*o,i=a/12/100,l=e*((Math.pow(1+i,n)-1)/i)*(1+i),s=e*n,r=l-s;t.innerHTML=`\n                                    Invested Amount: <strong>₹ ${s.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong><br>\n                                    Estimated Returns: <strong>₹ ${r.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong><br>\n                                    Future Value: <strong>₹ ${l.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong>\n                                `}else t.textContent="Please enter valid positive values."};document.querySelectorAll("#sip-monthly, #sip-rate, #sip-tenure").forEach(e=>e.addEventListener("input",a)),e.addEventListener("click",a),a()}},
+                'qr-code-generator':{html:`<label for="qr-text">Text or URL:</label><input type="text" id="qr-text" placeholder="https://example.com"><button class="glowing-btn" id="generate-qr-btn">Generate QR Code</button><div id="qr-code-container" style="text-align: center; margin-top:1rem;"></div>`,js:()=>{document.getElementById("generate-qr-btn").addEventListener("click",()=>{const e=document.getElementById("qr-text").value,t=document.getElementById("qr-code-container");if(!e)return void(t.innerHTML="<p>Please enter text or a URL.</p>");t.innerHTML="<p>Generating...</p>";const a=new Image;a.src=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(e)}&bgcolor=ffffff&color=0d0f14&qzone=1`,a.style.padding="10px",a.style.borderRadius="5px",a.style.background="white",a.onload=()=>{t.innerHTML="",t.appendChild(a)},a.onerror=()=>{t.innerHTML="<p>Error generating QR code. Please try again.</p>"}})}},
+                'password-generator':{html:`<label for="pw-length">Password Length:</label><input type="number" id="pw-length" value="16" min="4" max="128"><label style="display:block; margin-top: 0.5rem;"><input type="checkbox" id="pw-uppercase" checked> Uppercase (A-Z)</label><label style="display:block;"><input type="checkbox" id="pw-lowercase" checked> Lowercase (a-z)</label><label style="display:block;"><input type="checkbox" id="pw-numbers" checked> Numbers (0-9)</label><label style="display:block;"><input type="checkbox" id="pw-symbols" checked> Symbols (!@#$)</label><button class="glowing-btn" id="generate-pw-btn" style="margin-top: 1rem;">Generate Password</button><div class="result-box" id="pw-result" style="margin-top: 1rem; cursor: pointer;" title="Click to copy"></div>`,js:()=>{const e=document.getElementById("pw-result"),t=()=>{const e=document.getElementById("pw-uppercase").checked,a=document.getElementById("pw-lowercase").checked,o=document.getElementById("pw-numbers").checked,n=document.getElementById("pw-symbols").checked;let i="";e&&(i+="ABCDEFGHIJKLMNOPQRSTUVWXYZ"),a&&(i+="abcdefghijklmnopqrstuvwxyz"),o&&(i+="0123456789"),n&&(i+="!@#$%^&*()_+~`|}{[]:;?><,./-=");const l=+document.getElementById("pw-length").value;if(""===i)return void(resultEl.innerText="Please select at least one character set.");let s="";for(let e=0;e<l;e++)s+=i.charAt(Math.floor(Math.random()*i.length));resultEl.innerText=s};document.getElementById("generate-pw-btn").addEventListener("click",t),e.addEventListener("click",()=>{e.innerText&&!e.innerText.startsWith("Please")&&(navigator.clipboard.writeText(e.innerText),e.title="Copied!",setTimeout(()=>e.title="Click to copy",1500))}),t()}},
+                'word-counter':{html:`<label for="text-input">Enter your text below:</label><textarea id="word-count-text" placeholder="Start typing..."></textarea><div class="result-box" id="word-count-result">Words: 0 | Characters: 0 | Sentences: 0 | Paragraphs: 0</div>`,js:()=>{document.getElementById("word-count-text").addEventListener("input",e=>{const t=e.target.value,a=t.trim().split(/\s+/).filter(Boolean).length,o=t.length,n=t.match(/[^\.!\?]+[\.!\?]+/g)?.length||0,i=t.split(/\n\s*\n/).filter(e=>e.trim().length>0).length;document.getElementById("word-count-result").innerHTML=`\n                                Words: <strong>${a}</strong> | Characters: <strong>${o}</strong> | Sentences: <strong>${n}</strong> | Paragraphs: <strong>${i}</strong>\n                            `})}},
+                'base64-converter':{html:`<label for="base64-input">Input:</label><textarea id="base64-input"></textarea><div style="display: flex; gap: 1rem; margin-top: 1rem;"><button class="glowing-btn" id="base64-encode-btn">Encode to Base64</button><button class="glowing-btn" id="base64-decode-btn">Decode from Base64</button></div><label for="base64-output" style="margin-top: 1rem;">Output:</label><textarea id="base64-output" readonly></textarea>`,js:()=>{const e=document.getElementById("base64-input"),t=document.getElementById("base64-output");document.getElementById("base64-encode-btn").addEventListener("click",()=>{try{t.value=btoa(unescape(encodeURIComponent(e.value))),t.style.color="var(--text-primary)"}catch(e){t.value="Error encoding text.",t.style.color="#ff6b6b"}}),document.getElementById("base64-decode-btn").addEventListener("click",()=>{try{t.value=decodeURIComponent(escape(atob(e.value))),t.style.color="var(--text-primary)"}catch(e){t.value="Invalid Base64 string.",t.style.color="#ff6b6b"}})}},
+                'color-picker':{html:`<p>Select a color using the picker below.</p><input type="color" id="color-input" value="#42f8f5" style="width: 100%; height: 50px; border: none; padding: 0; background: none; cursor:pointer;"><div id="color-preview" style="width: 100%; height: 100px; border-radius: 5px; margin-top: 1rem;"></div><div id="color-values" class="result-box" style="margin-top: 1rem; cursor:pointer;" title="Click value to copy"></div>`,js:()=>{const e=document.getElementById("color-input"),t=document.getElementById("color-preview"),a=document.getElementById("color-values"),o=()=>{const e=colorInput.value;t.style.backgroundColor=e;const o=function(e){let t=0,a=0,o=0;return 4==e.length?(t=parseInt(e[1]+e[1],16),a=parseInt(e[2]+e[2],16),o=parseInt(e[3]+e[3],16)):7==e.length&&(t=parseInt(e.slice(1,3),16),a=parseInt(e.slice(3,5),16),o=parseInt(e.slice(5,7),16)),{r:t,g:a,b:o}}(e),n=function(e,t,a){e/=255,t/=255,a/=255;let o,n,i=Math.max(e,t,a),l=Math.min(e,t,a);if(n=(i+l)/2,i==l)o=n=0;else{const s=i-l;switch(n=n>0?s/(2-i-l):s/(i+l),i){case e:o=(t-a)/s+(t<a?6:0);break;case t:o=(a-e)/s+2;break;case a:o=(e-t)/s+4}o/=6}return{h:Math.round(360*o),s:Math.round(100*n),l:Math.round(100*i)}}(o.r,o.g,o.b),i=`rgb(${o.r}, ${o.g}, ${o.b})`,l=`hsl(${n.h}, ${n.s}%, ${n.l}%)`;a.innerHTML=`\n                                <span data-copy="${e}">HEX: <strong>${e}</strong></span><br>\n                                <span data-copy="${i}">RGB: <strong>${i}</strong></span><br>\n                                <span data-copy="${l}">HSL: <strong>${l}</strong></span>\n                            `};a.addEventListener("click",e=>{const t=e.target.closest("span[data-copy]");t&&(navigator.clipboard.writeText(t.dataset.copy),a.title=`Copied ${t.dataset.copy}!`,setTimeout(()=>a.title="Click value to copy",1500))}),e.addEventListener("input",o),o()}},
+                'text-to-speech':{html:`<label for="tts-text">Text to Speak:</label><textarea id="tts-text">Hello, this is boxput. I can read this text for you.</textarea><label for="tts-voice">Select Voice:</label><select id="tts-voice"></select><button class="glowing-btn" id="speak-btn">Speak</button><button class="glowing-btn" id="stop-btn">Stop</button>`,js:()=>{const e=window.speechSynthesis,t=document.getElementById("tts-voice"),a=document.getElementById("speak-btn"),o=document.getElementById("stop-btn");let n=[];function i(){n=e.getVoices();const a=t.value;t.innerHTML="",n.forEach(e=>{const o=document.createElement("option");o.textContent=`${e.name} (${e.lang})`,e.default&&(o.selected=!0),o.setAttribute("data-lang",e.lang),o.setAttribute("data-name",e.name),t.appendChild(o)}),t.value=a}i(),void 0!==e.onvoiceschanged&&(e.onvoiceschanged=i),a.addEventListener("click",()=>{e.speaking&&e.cancel();const a=document.getElementById("tts-text").value;if(!a)return;const o=new SpeechSynthesisUtterance(a),i=t.selectedOptions[0].getAttribute("data-name");o.voice=n.find(e=>e.name===i),e.speak(o)}),o.addEventListener("click",()=>{e.speaking&&e.cancel()})},cleanup:()=>{window.speechSynthesis&&window.speechSynthesis.speaking&&window.speechSynthesis.cancel()}},
+                'speech-to-text':{html:`<p>Click the button and start speaking.</p><button class="glowing-btn" id="stt-btn">Start Listening</button><div class="result-box" id="stt-result">Transcript will appear here...</div>`,js:()=>{const e=window.SpeechRecognition||window.webkitSpeechRecognition,t=document.getElementById("stt-result"),a=document.getElementById("stt-btn");if(!e)return t.textContent="Sorry, your browser doesn't support Speech Recognition.",void(a.disabled=!0);const o=new e;o.interimResults=!0,o.continuous=!0;let n=!1;a.addEventListener("click",()=>{n?o.stop():o.start()}),o.onstart=()=>{n=!0,a.textContent="Stop Listening",t.textContent="Listening..."},o.onresult=e=>{const a=Array.from(e.results).map(e=>e[0]).map(e=>e.transcript).join("");t.textContent=a},o.onerror=e=>{t.textContent="Error: "+e.error},o.onend=()=>{n=!1,a.textContent="Start Listening"}},cleanup:()=>{const e=window.SpeechRecognition||window.webkitSpeechRecognition;e&&new e.stop()}},
+                'json-formatter':{html:`<label for="json-input">Paste your JSON here:</label><textarea id="json-input" placeholder='{"key": "value"}'></textarea><button class="glowing-btn" id="format-json-btn">Format JSON</button><div class="result-box" id="json-result"></div>`,js:()=>{document.getElementById("format-json-btn").addEventListener("click",()=>{const e=document.getElementById("json-input").value,t=document.getElementById("json-result");try{const a=JSON.parse(e),o=JSON.stringify(a,null,2);t.style.color="var(--text-primary)",t.innerText=o}catch(e){t.style.color="#ff6b6b",t.innerText=`Invalid JSON: ${e.message}`}})}},
+                'unit-converter':{html:`<label for="unit-category">Category:</label><select id="unit-category"></select><label for="unit-value">Value:</label><input type="number" id="unit-value" value="1"><label for="from-unit">From:</label><select id="from-unit"></select><label for="to-unit">To:</label><select id="to-unit"></select><div id="unit-result" class="result-box"></div>`,js:()=>{const e={Length:{meter:1,kilometer:1e3,centimeter:.01,mile:1609.34,foot:.3048,inch:.0254},Weight:{gram:1,kilogram:1e3,milligram:.001,pound:453.592,ounce:28.3495},Temperature:{celsius:{toBase:e=>e,fromBase:e=>e},fahrenheit:{toBase:e=>(e-32)*5/9,fromBase:e=>9*e/5+32},kelvin:{toBase:e=>e-273.15,fromBase:e=>e+273.15}}},t=document.getElementById("unit-category"),a=document.getElementById("unit-value"),o=document.getElementById("from-unit"),n=document.getElementById("to-unit"),i=document.getElementById("unit-result");function l(){for(const a in e)t.add(new Option(a,a))}function s(){const t=t.value;o.innerHTML="",n.innerHTML="";for(const a in e[t])o.add(new Option(a,a)),n.add(new Option(a,a));n.selectedIndex=1}function r(){const t=t.value,l=parseFloat(a.value),s=o.value,r=n.value;let c;c="Temperature"===t?e[t][s].fromBase(e[t][r].toBase(l)):l*e[t][s]/e[t][r],i.innerHTML=`Result: <strong>${c.toFixed(6).replace(/\.?0+$/,"")} ${r}</strong>`}t.addEventListener("change",()=>{s(),r()}),a.addEventListener("input",r),o.addEventListener("change",r),n.addEventListener("change",r),l(),s(),r()}},
+                'bmi-calculator':{html:`<div style="display:flex; gap:1rem; margin-bottom:1rem;"><label><input type="radio" name="bmi-units" value="metric" checked> Metric</label><label><input type="radio" name="bmi-units" value="imperial"> Imperial</label></div><div id="metric-inputs"><label for="height-cm">Height (cm):</label> <input type="number" id="height-cm" value="175"><label for="weight-kg">Weight (kg):</label> <input type="number" id="weight-kg" value="70"></div><div id="imperial-inputs" style="display:none;"><label for="height-ft">Height (ft):</label> <input type="number" id="height-ft" value="5"><label for="height-in">Height (in):</label> <input type="number" id="height-in" value="9"><label for="weight-lbs">Weight (lbs):</label> <input type="number" id="weight-lbs" value="155"></div><button class="glowing-btn" id="calculate-bmi-btn">Calculate BMI</button><div id="bmi-result" class="result-box"></div>`,js:()=>{const e=document.querySelectorAll('input[name="bmi-units"]'),t=document.getElementById("metric-inputs"),a=document.getElementById("imperial-inputs"),o=document.getElementById("calculate-bmi-btn"),n=document.getElementById("bmi-result");e.forEach(e=>e.addEventListener("change",e=>{t.style.display="metric"===e.target.value?"block":"none",a.style.display="imperial"===e.target.value?"block":"none"}));const i=()=>{const e=document.querySelector('input[name="bmi-units"]:checked').value;let t,a;if("metric"===e)t=parseFloat(document.getElementById("height-cm").value)/100,a=parseFloat(document.getElementById("weight-kg").value);else{const e=parseFloat(document.getElementById("height-ft").value)||0,o=parseFloat(document.getElementById("height-in").value)||0;t=12*e*0.0254+o*0.0254,a=parseFloat(document.getElementById("weight-lbs").value)*.453592}if(t>0&&a>0){const e=a/(t*t);let o="";o=e<18.5?"Underweight":e<24.9?"Normal weight":e<29.9?"Overweight":"Obesity",n.innerHTML=`Your BMI is <strong>${e.toFixed(2)}</strong>. Category: <strong>${o}</strong>`}else n.textContent="Please enter valid values."};o.addEventListener("click",i),document.querySelectorAll("#metric-inputs input, #imperial-inputs input").forEach(e=>e.addEventListener("input",i))}},
+                'timer-stopwatch':{html:`<div id="ts-tabs" style="display:flex; border-bottom:1px solid var(--accent-primary); margin-bottom:1rem;"><button class="tab-btn active" data-tab="stopwatch">Stopwatch</button><button class="tab-btn" data-tab="timer">Timer</button></div><div id="stopwatch-panel"><div id="stopwatch-display" style="font-size:2.5rem; font-family:var(--font-display); text-align:center;">00:00:00.000</div><div style="display:flex; justify-content:center; gap:1rem; margin-top:1rem;"><button class="glowing-btn" id="sw-start">Start</button><button class="glowing-btn" id="sw-stop" disabled>Stop</button><button class="glowing-btn" id="sw-reset" disabled>Reset</button></div></div><div id="timer-panel" style="display:none;"><div style="display:flex; justify-content:center; gap:0.5rem; align-items:center;"><input type="number" id="t-hr" value="0" min="0" style="width:60px;" placeholder="HH">: <input type="number" id="t-min" value="5" min="0" max="59" style="width:60px;" placeholder="MM">: <input type="number" id="t-sec" value="0" min="0" max="59" style="width:60px;" placeholder="SS"></div><div id="timer-display" style="font-size:2.5rem; font-family:var(--font-display); text-align:center; margin-top:1rem;">00:05:00</div><div style="display:flex; justify-content:center; gap:1rem; margin-top:1rem;"><button class="glowing-btn" id="t-start">Start</button><button class="glowing-btn" id="t-stop" disabled>Stop</button><button class="glowing-btn" id="t-reset">Reset</button></div></div>`,js:function(){let e,t;const a=document.querySelectorAll(".tab-btn");a.forEach(e=>e.addEventListener("click",()=>{a.forEach(e=>e.classList.remove("active")),e.classList.add("active"),document.getElementById("stopwatch-panel").style.display="stopwatch"===e.dataset.tab?"block":"none",document.getElementById("timer-panel").style.display="timer"===e.dataset.tab?"block":"none"}));const o=document.getElementById("stopwatch-display"),n=document.getElementById("sw-start"),i=document.getElementById("sw-stop"),l=document.getElementById("sw-reset");let s,r=0;n.onclick=()=>{s=Date.now()-r,e=setInterval(()=>{r=Date.now()-s,o.textContent=function(e){const t=new Date(e);return`${String(t.getUTCMinutes()).padStart(2,"0")}:${String(t.getUTCSeconds()).padStart(2,"0")}:${String(t.getUTCMilliseconds()).padStart(3,"0")}`}(r)},10),n.disabled=!0,i.disabled=!1,l.disabled=!1},i.onclick=()=>{clearInterval(e),n.disabled=!1,i.disabled=!0},l.onclick=()=>{clearInterval(e),r=0,o.textContent="00:00:00.000",n.disabled=!1,i.disabled=!0,l.disabled=!0};const c=document.getElementById("timer-display"),d=document.getElementById("t-start"),m=document.getElementById("t-stop"),g=document.getElementById("t-reset");let u;const p=()=>{c.textContent=new Date(u*1e3).toISOString().substr(11,8)},h=()=>{clearInterval(t);const e=parseInt(document.getElementById("t-hr").value)||0,a=parseInt(document.getElementById("t-min").value)||0,o=parseInt(document.getElementById("t-sec").value)||0;u=3600*e+60*a+o,p(),d.disabled=!1,m.disabled=!0};d.onclick=()=>{u<=0&&h(),u>0&&(t=setInterval(()=>{u--,p(),u<=0&&(clearInterval(t),c.textContent="DONE!",d.disabled=!1,m.disabled=!0)},1e3),d.disabled=!0,m.disabled=!1)},m.onclick=()=>{clearInterval(t),d.disabled=!1,m.disabled=!0},g.onclick=h,h(),this.cleanup=()=>{clearInterval(e),clearInterval(t)}},cleanup:function(){this.cleanup&&this.cleanup()}},
+                'lorem-ipsum-generator':{html:`<label for="lorem-paragraphs">Number of Paragraphs:</label><input type="number" id="lorem-paragraphs" value="3" min="1" max="50"><button class="glowing-btn" id="generate-lorem-btn">Generate Text</button><div id="lorem-result" class="result-box" style="white-space: pre-wrap; margin-top: 1rem; cursor: pointer;" title="Click to copy"></div>`,js:()=>{const e=document.getElementById("generate-lorem-btn"),t=document.getElementById("lorem-result"),a=["lorem","ipsum","dolor","sit","amet","consectetur","adipiscing","elit","curabitur","vel","hendrerit","libero","eleifend","blandit","nunc","ornare","odio","ut","orci","gravida","imperdiet","nullam","purus","lacinia","a","pretium","quis","congue","praesent","sagittis","laoreet","auctor","mauris","non","velit","vel","efficitur","ante","sodales","dapibus","nam","sed","sodales","mi","in","porta","risus","proin","bibendum","quam","eu","libero","molestie","id","auctor","tellus","dictum","fusce","eu","convallis","quam","cras","convallis","molestie","dolor","sed","porttitor","euismod","semper"],o=()=>{const e=parseInt(document.getElementById("lorem-paragraphs").value),o=Array(e).fill("").map(()=>Array(Math.floor(4*Math.random())+4).fill("").map(()=>Array(Math.floor(10*Math.random())+5).fill("").map(()=>a[Math.floor(Math.random()*a.length)]).join(" ")).map(e=>e.charAt(0).toUpperCase()+e.slice(1)+". ").join("")).join("\n\n");t.textContent=o.trim()};e.addEventListener("click",o),t.addEventListener("click",()=>{t.textContent&&(navigator.clipboard.writeText(t.textContent),t.title="Copied!",setTimeout(()=>t.title="Click to copy",1500))}),o()}},
+                'case-converter':{html:`<label for="case-input">Enter your text:</label><textarea id="case-input" placeholder="Type or paste text here..."></textarea><div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;"><button class="glowing-btn" data-case="upper">UPPER CASE</button><button class="glowing-btn" data-case="lower">lower case</button><button class="glowing-btn" data-case="title">Title Case</button><button class="glowing-btn" data-case="sentence">Sentence case</button><button class="glowing-btn" data-case="copy">Copy</button><button class="glowing-btn" data-case="clear">Clear</button></div><div id="case-status" class="result-box" style="margin-top:1rem; min-height: 20px; padding: 0.5rem 1rem;"></div>`,js:()=>{const e=document.getElementById("case-input"),t=document.getElementById("case-status"),a=document.querySelector(".tool-ui div");a.addEventListener("click",a=>{if("BUTTON"!==a.target.tagName)return;const o=a.target.dataset.case;let n=e.value;switch(t.textContent="",o){case"upper":e.value=n.toUpperCase();break;case"lower":e.value=n.toLowerCase();break;case"title":e.value=n.toLowerCase().split(" ").map(e=>e.charAt(0).toUpperCase()+e.slice(1)).join(" ");break;case"sentence":e.value=n.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g,e=>e.toUpperCase());break;case"copy":n&&(navigator.clipboard.writeText(n),t.textContent="Text copied to clipboard!");break;case"clear":e.value=""}})}}
+            };
+
+            return implementations[toolId] || { html: `<p>Tool not found.</p>`, js: () => {} };
+        }
+    });
+    </script>
+</body>
+</html>
